@@ -1,10 +1,12 @@
 import 'phaser';
+import { GameBootstrap } from '@/core/GameBootstrap';
+import { GameConstants } from '@/core/config/Constants';
 
 // Boot Configuration
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 768,
-  height: 1024,
+  width: GameConstants.SCREEN_WIDTH,
+  height: GameConstants.SCREEN_HEIGHT,
   parent: 'app',
   scale: {
     mode: Phaser.Scale.FIT,
@@ -14,7 +16,9 @@ const config: Phaser.Types.Core.GameConfig = {
   scene: [] // To be implemented
 };
 
-// Initialize Phaser Game
-const game = new Phaser.Game(config);
+// Initialize Application
+GameBootstrap.run().then(() => {
+  // Initialize Phaser Game only after bootstrap is complete
+  const game = new Phaser.Game(config);
+});
 
-export default game;
