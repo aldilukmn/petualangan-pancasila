@@ -1,6 +1,10 @@
 import 'phaser';
 import { GameBootstrap } from '@/core/GameBootstrap';
 import { GameConstants } from '@/core/config/Constants';
+import { BootScene } from '@/presentation/scenes/BootScene';
+import { PreloadScene } from '@/presentation/scenes/PreloadScene';
+import { HomeScene } from '@/presentation/scenes/HomeScene';
+import { MapScene } from '@/presentation/scenes/MapScene';
 
 // Boot Configuration
 const config: Phaser.Types.Core.GameConfig = {
@@ -13,7 +17,7 @@ const config: Phaser.Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
   backgroundColor: '#000000',
-  scene: [] // To be implemented
+  scene: [BootScene, PreloadScene, HomeScene, MapScene] // Register Scenes
 };
 
 // Initialize Application
