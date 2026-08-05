@@ -7,6 +7,7 @@ import { SaveManager } from '@/core/managers/SaveManager';
 import { ProgressionSystem } from '@/core/systems/ProgressionSystem';
 import { AchievementSystem } from '@/core/systems/AchievementSystem';
 import { ScoringSystem } from '@/core/systems/ScoringSystem';
+import { EventOrchestrator } from '@/integration/wiring/EventOrchestrator';
 
 export class GameBootstrap {
   private static isBootstrapped = false;
@@ -35,10 +36,13 @@ export class GameBootstrap {
       // 5. Initialize Core Logic Systems
       this.initializeSystems();
 
-      // 6. Initialize Managers (SaveManager will load game state here)
+      // 6. Initialize Event Orchestrator (Integration Layer)
+      this.initializeIntegration();
+
+      // 7. Initialize Managers (SaveManager will load game state here)
       await ManagerRegistry.getInstance().initializeAll();
 
-      // 7. Setup Global Shutdown Hooks
+      // 8. Setup Global Shutdown Hooks
       this.setupShutdownHooks();
 
       this.isBootstrapped = true;
@@ -67,6 +71,11 @@ export class GameBootstrap {
     ProgressionSystem.getInstance();
     AchievementSystem.getInstance();
     ScoringSystem.getInstance();
+  }
+
+  private static initializeIntegration(): void {
+    Logger.debug('GameBootstrap: Initializing integration layer...');
+    EventOrchestrator.initialize();
   }
 
   private static setupShutdownHooks(): void {
