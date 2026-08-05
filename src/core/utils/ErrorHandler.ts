@@ -46,7 +46,11 @@ export class ErrorHandler {
 
   private setupGlobalHandlers(): void {
     window.addEventListener('error', (event) => {
-      this.handle(event.error || new Error(event.message), ErrorSeverity.FATAL, 'Global Window Error');
+      this.handle(
+        event.error || new Error(event.message),
+        ErrorSeverity.FATAL,
+        'Global Window Error'
+      );
     });
 
     window.addEventListener('unhandledrejection', (event) => {

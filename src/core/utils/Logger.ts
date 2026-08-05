@@ -7,7 +7,8 @@ export enum LogLevel {
 }
 
 export class Logger {
-  private static level: LogLevel = import.meta.env.VITE_DEBUG_MODE === 'true' ? LogLevel.DEBUG : LogLevel.WARN;
+  private static level: LogLevel =
+    import.meta.env.VITE_DEBUG_MODE === 'true' ? LogLevel.DEBUG : LogLevel.WARN;
 
   static setLevel(level: LogLevel) {
     this.level = level;

@@ -2,7 +2,7 @@ import { Logger } from '@/core/utils/Logger';
 import { ErrorHandler } from '@/core/utils/ErrorHandler';
 import { EventBus } from '@/core/events/EventBus';
 import { ManagerRegistry } from '@/core/managers/ManagerRegistry';
-import { ServiceRegistry } from '@/core/services/ServiceRegistry';
+import { AssetManager } from '@/core/managers/AssetManager';
 
 export class GameBootstrap {
   private static isBootstrapped = false;
@@ -15,22 +15,22 @@ export class GameBootstrap {
 
     try {
       Logger.info('GameBootstrap: Starting initialization sequence...');
-      
+
       // 1. Initialize Error Handler
       ErrorHandler.getInstance();
-      
+
       // 2. Initialize EventBus
       EventBus.getInstance();
-      
+
       // 3. Register Core Services
       this.registerServices();
-      
+
       // 4. Register Managers
       this.registerManagers();
-      
+
       // 5. Initialize Managers
       await ManagerRegistry.getInstance().initializeAll();
-      
+
       // 6. Setup Global Shutdown Hooks
       this.setupShutdownHooks();
 
@@ -52,10 +52,9 @@ export class GameBootstrap {
 
   private static registerManagers(): void {
     Logger.debug('GameBootstrap: Registering managers...');
-    // const registry = ManagerRegistry.getInstance();
-    // registry.register('SaveManager', new SaveManager());
-    // registry.register('ContentManager', new ContentManager());
-    // ...
+    const registry = ManagerRegistry.getInstance();
+
+    registry.register('AssetManager', new AssetManager());
   }
 
   private static setupShutdownHooks(): void {
@@ -66,13 +65,13 @@ export class GameBootstrap {
 
   static shutdown(): void {
     if (!this.isBootstrapped) return;
-    
+
     Logger.info('GameBootstrap: Commencing shutdown sequence...');
     EventBus.getInstance().emit('APP:SHUTTING_DOWN');
-    
+
     // Shut down managers in reverse order
     ManagerRegistry.getInstance().shutdownAll();
-    
+
     Logger.info('GameBootstrap: Shutdown complete.');
   }
 }

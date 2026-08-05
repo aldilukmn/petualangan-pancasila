@@ -19,6 +19,5 @@ const config: Phaser.Types.Core.GameConfig = {
 // Initialize Application
 GameBootstrap.run().then(() => {
   // Initialize Phaser Game only after bootstrap is complete
-  const game = new Phaser.Game(config);
+  new Phaser.Game(config);
 });
-
