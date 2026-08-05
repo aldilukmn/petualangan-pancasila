@@ -3,6 +3,10 @@ import { ErrorHandler } from '@/core/utils/ErrorHandler';
 import { EventBus } from '@/core/events/EventBus';
 import { ManagerRegistry } from '@/core/managers/ManagerRegistry';
 import { AssetManager } from '@/core/managers/AssetManager';
+import { SaveManager } from '@/core/managers/SaveManager';
+import { ProgressionSystem } from '@/core/systems/ProgressionSystem';
+import { AchievementSystem } from '@/core/systems/AchievementSystem';
+import { ScoringSystem } from '@/core/systems/ScoringSystem';
 
 export class GameBootstrap {
   private static isBootstrapped = false;
@@ -28,10 +32,13 @@ export class GameBootstrap {
       // 4. Register Managers
       this.registerManagers();
 
-      // 5. Initialize Managers
+      // 5. Initialize Core Logic Systems
+      this.initializeSystems();
+
+      // 6. Initialize Managers (SaveManager will load game state here)
       await ManagerRegistry.getInstance().initializeAll();
 
-      // 6. Setup Global Shutdown Hooks
+      // 7. Setup Global Shutdown Hooks
       this.setupShutdownHooks();
 
       this.isBootstrapped = true;
@@ -45,9 +52,6 @@ export class GameBootstrap {
 
   private static registerServices(): void {
     Logger.debug('GameBootstrap: Registering services...');
-    // const registry = ServiceRegistry.getInstance();
-    // registry.register('StorageService', new StorageService());
-    // ...
   }
 
   private static registerManagers(): void {
@@ -55,6 +59,14 @@ export class GameBootstrap {
     const registry = ManagerRegistry.getInstance();
 
     registry.register('AssetManager', new AssetManager());
+    registry.register('SaveManager', new SaveManager());
+  }
+
+  private static initializeSystems(): void {
+    Logger.debug('GameBootstrap: Initializing core systems...');
+    ProgressionSystem.getInstance();
+    AchievementSystem.getInstance();
+    ScoringSystem.getInstance();
   }
 
   private static setupShutdownHooks(): void {
